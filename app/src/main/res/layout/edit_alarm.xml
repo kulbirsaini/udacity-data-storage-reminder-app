@@ -121,27 +121,4 @@
         app:layout_constraintStart_toEndOf="@+id/occasionIcon"
         app:layout_constraintTop_toBottomOf="@+id/spacer2" />
 
-    <ImageView
-        android:id="@+id/notificationIcon"
-        style="@style/EditAlarmIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/alarm_notification_hint"
-        android:src="@drawable/ic_music_note_black_24dp"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/spacer2" />
-
-    <EditText
-        android:id="@+id/notificationValue"
-        style="@style/EditAlarmValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:autofillHints="@string/alarm_notification_hint"
-        android:ems="10"
-        android:hint="@string/alarm_music_hint"
-        android:inputType="textNoSuggestions"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/notificationIcon"
-        app:layout_constraintTop_toBottomOf="@+id/spacer2" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

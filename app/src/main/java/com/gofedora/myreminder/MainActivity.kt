@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
         fab.setOnClickListener {
             val editFragment = EditAlarmFragment()
             editFragment.arguments = Bundle().apply {
-                putSerializable(EditAlarmFragment.ALARM, null)
+                putSerializable(FragmentCallback.ALARM, null)
             }
             editFragment.setFragmentActionListener(this)
 

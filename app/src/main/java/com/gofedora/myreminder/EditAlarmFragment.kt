@@ -11,10 +11,6 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.edit_alarm.*
 
 class EditAlarmFragment: Fragment() {
-    companion object {
-        const val ALARM = "ALARM"
-    }
-
     private lateinit var callback: FragmentCallback
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
