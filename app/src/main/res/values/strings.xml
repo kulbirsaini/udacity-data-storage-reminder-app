@@ -1,6 +1,20 @@
 <resources>
     <string name="app_name">My Reminder</string>
     <string name="action_settings">Settings</string>
+    <string name="LogTag">AlarmLog</string>
+    
     <!-- Strings used for fragments for navigation -->
-    <string name="alarm_title">Title</string>
+    <string name="alarm_title_hint">Alarm Title</string>
+    <string name="alarm_occasion_label">Occasion</string>
+    <string name="alarm_date_label">Date</string>
+    <string name="alarm_date_hint">Date</string>
+    <string name="alarm_time_hint">Time</string>
+    <string name="alarm_music_hint">Notification</string>
+    <string name="alarm_notification_hint">Notification</string>
+
+    <string-array name="occasion_values">
+        <item>Anniversary</item>
+        <item>Birthday</item>
+        <item>Other</item>
+    </string-array>
 </resources>

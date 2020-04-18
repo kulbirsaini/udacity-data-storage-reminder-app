@@ -15,8 +15,9 @@ class AlarmListFragment : Fragment() {
 
     private lateinit var callback: FragmentCallback
 
-    fun setFragmentActionListener(callback: FragmentCallback) {
+    fun setFragmentActionListener(callback: FragmentCallback): AlarmListFragment {
         this.callback = callback
+        return this
     }
 
     override fun onCreateView(

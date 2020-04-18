@@ -42,10 +42,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
+        app:backgroundTint="@android:color/holo_red_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/ic_alarm_add_black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
