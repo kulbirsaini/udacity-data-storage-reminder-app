@@ -2,37 +2,26 @@ package com.gofedora.myreminder
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.gofedora.myreminder.fragments.AlarmListFragment
+import com.gofedora.myreminder.fragments.EditAlarmFragment
+import com.gofedora.myreminder.fragments.FragmentCallback
+import com.gofedora.myreminder.pickers.DatePickerFragment
+import com.gofedora.myreminder.pickers.TimePickerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), FragmentCallback {
-
-    companion object {
-        val ALARMS = arrayListOf(
-            Alarm("Alarm 1"),
-            Alarm("Alarm 2"),
-            Alarm("Alarm 3"),
-            Alarm("Alarm 4"),
-            Alarm("Alarm 5"),
-            Alarm("Alarm 6"),
-            Alarm("Alarm 7"),
-            Alarm("Alarm 8"),
-            Alarm("Alarm 9"),
-            Alarm("Alarm 10"),
-            Alarm("Alarm 11")
-        )
-    }
-
+class MainActivity : AppCompatActivity(),
+    FragmentCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
         val fragment = AlarmListFragment()
+        fragment.arguments = Bundle()
         fragment.setFragmentActionListener(this)
 
         supportFragmentManager.beginTransaction()
@@ -40,11 +29,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
             .commit()
 
         fab.setOnClickListener {
-            val editFragment = EditAlarmFragment()
-            editFragment.arguments = Bundle().apply {
-                putSerializable(FragmentCallback.ALARM, null)
-            }
-            editFragment.setFragmentActionListener(this)
+            val editFragment = EditAlarmFragment().setFragmentActionListener(this)
 
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, editFragment)
@@ -54,19 +39,17 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> {
-                Toast.makeText(this, "Settings Clicked!", Toast.LENGTH_SHORT).show()
+            R.id.actionInsertDummyData -> {
+                Toast.makeText(this, "Insert Dummy Data!", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.actionDeleteAll -> {
+                Toast.makeText(this, "Delete All Entries!", Toast.LENGTH_SHORT).show()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -74,9 +57,8 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-
         fab.visibility = View.VISIBLE
+        super.onBackPressed()
     }
 
     override fun onActionPerformed(bundle: Bundle) {
@@ -84,26 +66,43 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
 
         when (bundle.getInt(FragmentCallback.ACTION_KEY)) {
             FragmentCallback.ALARM_CLICKED -> {
-                val fragment = EditAlarmFragment()
+                val fragment = EditAlarmFragment().setFragmentActionListener(this)
                 fragment.arguments = bundle
-                fragment.setFragmentActionListener(this)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .addToBackStack("AlarmFragments")
                     .commit()
                 fab.visibility = View.GONE
             }
-            FragmentCallback.DATE_PICKER_CLICKED -> DatePickerFragment(bundle.getString(FragmentCallback.DATE)).setFragmentActionListener(this).show(supportFragmentManager, "datePicker")
-            FragmentCallback.TIME_PICKER_CLICKED -> TimePickerFragment(bundle.getString(FragmentCallback.TIME)).setFragmentActionListener(this).show(supportFragmentManager, "timePicker")
+            FragmentCallback.DATE_PICKER_CLICKED -> {
+                DatePickerFragment(bundle.getString(FragmentCallback.DATE))
+                    .setFragmentActionListener(this)
+                    .show(supportFragmentManager, "datePicker")
+            }
+            FragmentCallback.TIME_PICKER_CLICKED -> {
+                TimePickerFragment(bundle.getString(FragmentCallback.TIME))
+                    .setFragmentActionListener(this)
+                    .show(supportFragmentManager, "timePicker")
+            }
             FragmentCallback.DATE_SELECTED -> {
-                Log.e(getString(R.string.LogTag), "In MainActivity: " + bundle.getString(FragmentCallback.DATE))
+                Log.e(getString(R.string.LogTag), "In MainActivity: " + bundle.getSerializable(FragmentCallback.DATE))
                 val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as EditAlarmFragment
                 fragment.onFragmentActionPerformed(bundle)
             }
             FragmentCallback.TIME_SELECTED -> {
-                Log.e(getString(R.string.LogTag), "In MainActivity: " + bundle.getString(FragmentCallback.TIME))
+                Log.e(getString(R.string.LogTag), "In MainActivity: " + bundle.getSerializable(FragmentCallback.TIME))
                 val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as EditAlarmFragment
                 fragment.onFragmentActionPerformed(bundle)
+            }
+            FragmentCallback.SAVE_ALARM -> {
+                Log.e(getString(R.string.LogTag), "In MainActivity: Save Alarm")
+                val fragment = AlarmListFragment().setFragmentActionListener(this)
+                fragment.arguments = bundle
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit()
+
+                fab.visibility = View.VISIBLE
             }
         }
     }

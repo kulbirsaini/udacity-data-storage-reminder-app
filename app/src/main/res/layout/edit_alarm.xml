@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AlarmListFragment">
+    tools:context=".fragments.AlarmListFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -28,6 +28,7 @@
         style="@style/EditAlarmValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/alarm_title_hint"
@@ -55,16 +56,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spacer1" />
 
-    <EditText
+    <TextView
         android:id="@+id/dateValue"
         style="@style/EditAlarmValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:autofillHints="@string/alarm_date_hint"
         android:ems="10"
-        android:focusableInTouchMode="false"
         android:hint="@string/alarm_date_hint"
-        android:inputType="none|date"
         app:layout_constraintEnd_toEndOf="@id/guideline"
         app:layout_constraintStart_toEndOf="@+id/dateIcon"
         app:layout_constraintTop_toBottomOf="@+id/spacer1" />
@@ -79,16 +79,15 @@
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/spacer1" />
 
-    <EditText
+    <TextView
         android:id="@+id/timeValue"
         style="@style/EditAlarmValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:autofillHints="@string/alarm_time_hint"
         android:ems="10"
-        android:focusableInTouchMode="false"
         android:hint="@string/alarm_time_hint"
-        android:inputType="none|time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/timeIcon"
         app:layout_constraintTop_toBottomOf="@+id/spacer1" />
@@ -117,7 +116,6 @@
         style="@style/EditAlarmValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toEndOf="@+id/occasionIcon"
         app:layout_constraintTop_toBottomOf="@+id/spacer2" />
 

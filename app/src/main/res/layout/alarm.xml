@@ -1,23 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/alarmView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@android:color/holo_blue_dark"
+    android:paddingStart="24dp"
+    android:paddingEnd="0dp"
+    android:paddingBottom="8dp"
+    tools:ignore="Overdraw">
 
     <TextView
         android:id="@+id/alarmTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/holo_green_light"
-        android:padding="32dp"
-        android:textAlignment="center"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:textAlignment="textStart"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Sample Text" />
+        tools:text="Alarm Title" />
+
+    <ImageView
+        android:id="@+id/alarmDateIcon"
+        style="@style/AlarmSubtitleIcon"
+        android:layout_marginStart="0dp"
+        android:contentDescription="@string/alarm_date_hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alarmTitle"
+        app:srcCompat="@drawable/ic_date_range_black_24dp" />
+
+    <TextView
+        android:id="@+id/alarmDate"
+        style="@style/AlarmSubtitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/alarmDateIcon"
+        app:layout_constraintTop_toBottomOf="@+id/alarmTitle"
+        tools:text="Sat Apr 21, 2020"/>
+
+    <ImageView
+        android:id="@+id/alarmTimeIcon"
+        style="@style/AlarmSubtitleIcon"
+        android:contentDescription="@string/alarm_time_hint"
+        app:layout_constraintStart_toEndOf="@+id/alarmDate"
+        app:layout_constraintTop_toBottomOf="@+id/alarmTitle"
+        app:srcCompat="@drawable/ic_access_time_black_24dp" />
+
+    <TextView
+        android:id="@+id/alarmTime"
+        style="@style/AlarmSubtitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/alarmTimeIcon"
+        app:layout_constraintTop_toBottomOf="@+id/alarmTitle"
+        tools:text="10:10 AM" />
+
+    <ImageView
+        android:id="@+id/alarmOccasionIcon"
+        style="@style/AlarmSubtitleIcon"
+        android:layout_marginStart="0dp"
+        android:contentDescription="@string/alarm_occasion_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alarmDateIcon"
+        app:srcCompat="@drawable/ic_cake_black_24dp" />
+
+    <TextView
+        android:id="@+id/alarmOccasion"
+        style="@style/AlarmSubtitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/alarmOccasionIcon"
+        app:layout_constraintTop_toBottomOf="@+id/alarmDateIcon"
+        tools:text="Anniversary" />
+
+    <ImageView
+        android:id="@+id/alarmDeleteIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@string/alarm_delete_hint"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_delete_black_24dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

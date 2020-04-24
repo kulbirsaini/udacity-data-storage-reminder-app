@@ -26,12 +26,24 @@
     <style name="EditAlarmValue">
         <item name="android:layout_marginTop">4dp</item>
         <item name="android:layout_marginStart">16dp</item>
-        <item name="android:layout_marginEnd">16dp</item>
         <item name="android:textSize">14sp</item>
     </style>
 
     <style name="HorizontalSpacer">
         <item name="android:layout_marginTop">16dp</item>
+    </style>
+
+    <style name="AlarmSubtitleIcon">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+    </style>
+
+    <style name="AlarmSubtitleText">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
 </resources>

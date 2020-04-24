@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">My Reminder</string>
-    <string name="action_settings">Settings</string>
     <string name="LogTag">AlarmLog</string>
     
     <!-- Strings used for fragments for navigation -->
@@ -9,12 +8,19 @@
     <string name="alarm_date_label">Date</string>
     <string name="alarm_date_hint">Date</string>
     <string name="alarm_time_hint">Time</string>
-    <string name="alarm_music_hint">Notification</string>
-    <string name="alarm_notification_hint">Notification</string>
+    <string name="action_save">Save</string>
+    <string name="action_insert_dummy_data">Insert Dummy Data</string>
+    <string name="action_delete_all_title">Delete All Entries</string>
+    <string name="alarm_delete_hint">Delete</string>
 
     <string-array name="occasion_values">
         <item>Anniversary</item>
         <item>Birthday</item>
         <item>Other</item>
+    </string-array>
+    <string-array name="occasion_keys">
+        <item>1</item>
+        <item>2</item>
+        <item>0</item>
     </string-array>
 </resources>
