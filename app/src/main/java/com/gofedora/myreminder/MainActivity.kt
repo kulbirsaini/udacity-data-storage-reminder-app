@@ -1,14 +1,17 @@
 package com.gofedora.myreminder
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.gofedora.myreminder.fragments.ReminderListFragment
-import com.gofedora.myreminder.fragments.ReminderEditFragment
+import androidx.fragment.app.FragmentManager
 import com.gofedora.myreminder.fragments.FragmentCallback
+import com.gofedora.myreminder.fragments.ReminderEditFragment
+import com.gofedora.myreminder.fragments.ReminderListFragment
 import com.gofedora.myreminder.pickers.DatePickerFragment
 import com.gofedora.myreminder.pickers.TimePickerFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -55,8 +58,10 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
                 true
             }
             R.id.actionDeleteAll -> {
-                ReminderViewModel(application).deleteAll()
-                Toast.makeText(this, "Deleted All Reminders!", Toast.LENGTH_SHORT).show()
+                deleteAlertDialog(R.string.delete_all_dialog_title, R.string.delete_all_dialog_message, DialogInterface.OnClickListener { _, _ ->
+                    ReminderViewModel(application).deleteAll()
+                    Toast.makeText(this, "Deleted All Reminders!", Toast.LENGTH_SHORT).show()
+                })
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -124,6 +129,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
                 val fragment = ReminderListFragment().apply {
                     setFragmentActionListener(this@MainActivity)
                 }
+                supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .commit()
@@ -132,12 +138,25 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
             }
             FragmentCallback.DELETE_REMINDER_CLICKED -> {
                 Log.e(getString(R.string.LogTag), "In MainActivity: Delete Reminder")
-                val reminder = bundle.getSerializable(FragmentCallback.REMINDER) as Reminder?
-                reminder?.let {
-                    ReminderViewModel(application).delete(it)
-                    Toast.makeText(this, "Reminder Deleted!", Toast.LENGTH_LONG).show()
-                }
+
+                deleteAlertDialog(R.string.delete_dialog_title, R.string.delete_dialog_message, DialogInterface.OnClickListener { _, _ ->
+                    val reminder = bundle.getSerializable(FragmentCallback.REMINDER) as Reminder?
+                    reminder?.let {
+                        ReminderViewModel(application).delete(it)
+                        Toast.makeText(this@MainActivity, "Reminder Deleted!", Toast.LENGTH_LONG).show()
+                    }
+                })
             }
         }
+    }
+
+    private fun deleteAlertDialog(titleResource: Int, messageResource: Int, positiveCallback: DialogInterface.OnClickListener) {
+        AlertDialog.Builder(this)
+            .setTitle(getString(titleResource))
+            .setMessage(getString(messageResource))
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setPositiveButton(android.R.string.yes, positiveCallback)
+            .setNegativeButton(android.R.string.no, null)
+            .show()
     }
 }
