@@ -15,40 +15,48 @@ class TimePickerFragment: DialogFragment(), TimePickerDialog.OnTimeSetListener {
     private lateinit var callback: FragmentCallback
     private var time: String? = null
 
+    /**
+     * Callback instance to communicate with parent activity/fragment
+     */
     fun setFragmentActionListener(callback: FragmentCallback) {
         this.callback = callback
     }
 
+    /**
+     * Set time that should be the default time on the TimePicker when initialized
+     * Format: R.string.time_format
+     */
     fun setTime(time: String?) {
         this.time = time
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val cal = Calendar.getInstance()
         context?.let {
-            val dialog = TimePickerDialog(it, this, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), android.text.format.DateFormat.is24HourFormat(it))
+            val cal = Calendar.getInstance()
 
-            time?.let { timeStr: String ->
-                SimpleDateFormat("hh:mm a", Locale.US).parse(timeStr)?.let { parsedTime: Date ->
+            // If we have a time, use it
+            time?.let { timeStr ->
+                SimpleDateFormat(getString(R.string.time_format), Locale.US).parse(timeStr)?.let { parsedTime ->
                     cal.time = parsedTime
-                    Log.e(getString(R.string.LogTag), "Setting time to $timeStr")
-                    dialog.updateTime(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
                 }
             }
 
-            return dialog
+            return TimePickerDialog(it, this, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), android.text.format.DateFormat.is24HourFormat(it))
         }
 
         return super.onCreateDialog(savedInstanceState)
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        val cal = Calendar.getInstance()
-        cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
-        cal.set(Calendar.MINUTE, minute)
+        // Build a Date instance with values provided
+        val cal = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, hourOfDay)
+            set(Calendar.MINUTE, minute)
+        }
 
         Log.e(getString(R.string.LogTag), "In DatePickerFragment: ${cal.time}")
 
+        // Announce the selected time to activity/fragment
         this.callback.onActionPerformed(Bundle().apply {
             putInt(FragmentCallback.ACTION_KEY, FragmentCallback.TIME_SELECTED)
             putSerializable(FragmentCallback.TIME, cal.time)
