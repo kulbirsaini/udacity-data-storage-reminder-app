@@ -19,7 +19,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), FragmentCallback {
 
     companion object {
-        private const val BACKSTACK_TAG = "ReminderFragments"
+        private const val REMINDER_LIST_FRAGMENT = 1
+        private const val REMINDER_EDIT_FRAGMENT = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,27 +29,56 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
         setSupportActionBar(toolbar)
 
         // Initiate a draw the reminder list on initial load
-        val fragment = ReminderListFragment().apply {
-            setFragmentActionListener(this@MainActivity)
-        }
-
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+        navigateToFragment(REMINDER_LIST_FRAGMENT)
 
         // Attach onClickListener to FloatingActionButton to switch to edit page
         fab.setOnClickListener {
-            val editFragment = ReminderEditFragment().apply {
-                setFragmentActionListener(this@MainActivity)
+            navigateToFragment(REMINDER_EDIT_FRAGMENT)
+        }
+    }
+
+    /**
+     * Navigate between fragments
+     */
+    private fun navigateToFragment(fragmentId: Int, bundle: Bundle = Bundle()) {
+        when (fragmentId) {
+            REMINDER_LIST_FRAGMENT -> {
+                // Flush the FragmentManager backstack to clear any fragments
+                supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+                val fragment = ReminderListFragment().apply {
+                    setFragmentActionListener(this@MainActivity)
+                }
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit()
+
+                // Show FloatingActionButton
+                fab.visibility = View.VISIBLE
+
+                // Disable back to home navigation button
+                toolbar.navigationIcon = null
             }
+            REMINDER_EDIT_FRAGMENT -> {
+                val fragment = ReminderEditFragment().apply {
+                    setFragmentActionListener(this@MainActivity)
+                    arguments = bundle
+                }
 
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, editFragment)
-                .addToBackStack(BACKSTACK_TAG)
-                .commit()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack("ReminderFragments")
+                    .commit()
 
-            // Hide FloatingActionButton on edit page
-            fab.visibility = View.GONE
+                // Hide FloatingActionButton on edit page
+                fab.visibility = View.GONE
+
+                // Add Back to Home navigation
+                toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+                toolbar.setNavigationOnClickListener {
+                    navigateToFragment(REMINDER_LIST_FRAGMENT)
+                }
+            }
         }
     }
 
@@ -57,6 +87,10 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.home -> {
+                Toast.makeText(this, "Go back", Toast.LENGTH_SHORT).show()
+                true
+            }
             // Insert Dummy Data clicked
             R.id.actionInsertDummyData -> {
                 // Generate reminders from our string resource
@@ -87,6 +121,10 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
     override fun onBackPressed() {
         // Show FloatingActionButton
         fab.visibility = View.VISIBLE
+
+        // Disable back to home navigation button
+        toolbar.navigationIcon = null
+
         super.onBackPressed()
     }
 
@@ -100,18 +138,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
             // A reminder in the reminder list was clicked, navigate to edit page
             FragmentCallback.REMINDER_CLICKED -> {
                 // Initiate ReminderEditFragment and pass along the arguments
-                val fragment = ReminderEditFragment().apply {
-                    setFragmentActionListener(this@MainActivity)
-                    arguments = bundle
-                }
-
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(BACKSTACK_TAG) // Add to back stack so that user can navigate back to reminder list
-                    .commit()
-
-                // Hide FloatingActionButton
-                fab.visibility = View.GONE
+                navigateToFragment(REMINDER_EDIT_FRAGMENT, bundle)
             }
             // Date was clicked on edit page, initiate and show DatePicker
             FragmentCallback.DATE_CLICKED -> {
@@ -156,19 +183,8 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
                     }
                 }
 
-                // Flush the FragmentManager backstack to clear any fragments
-                supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
                 // Time to switch back to reminder list
-                val fragment = ReminderListFragment().apply {
-                    setFragmentActionListener(this@MainActivity)
-                }
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .commit()
-
-                // Show the FloatingActionButton
-                fab.visibility = View.VISIBLE
+                navigateToFragment(REMINDER_LIST_FRAGMENT)
             }
             // Delete Icon clicked
             FragmentCallback.DELETE_REMINDER_CLICKED -> {
