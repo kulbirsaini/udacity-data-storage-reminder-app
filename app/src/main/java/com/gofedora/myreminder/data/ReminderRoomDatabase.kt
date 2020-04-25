@@ -6,46 +6,45 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.gofedora.myreminder.Alarm
+import com.gofedora.myreminder.Reminder
 import com.gofedora.myreminder.converters.DateConverter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Alarm::class], version = 1, exportSchema = false)
+@Database(entities = [Reminder::class], version = 1, exportSchema = false)
 @TypeConverters(DateConverter::class)
-abstract class AlarmRoomDatabase: RoomDatabase() {
+abstract class ReminderRoomDatabase: RoomDatabase() {
 
-    abstract fun alarmDao(): AlarmDao
+    abstract fun reminderDao(): ReminderDao
 
-    private class AlarmDatabaseCallback(private val scope: CoroutineScope): RoomDatabase.Callback() {
+    private class ReminderDatabaseCallback(private val scope: CoroutineScope): RoomDatabase.Callback() {
         override fun onOpen(db: SupportSQLiteDatabase) {
             super.onOpen(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    populateDatabase(database.alarmDao())
+                    clearDatabase(database.reminderDao())
                 }
             }
         }
 
-        suspend fun populateDatabase(alarmDao: AlarmDao) {
-            alarmDao.deleteAll()
-            alarmDao.insert(Alarm(title = "First Alarm"))
+        suspend fun clearDatabase(reminderDao: ReminderDao) {
+            reminderDao.deleteAll()
         }
     }
 
     companion object {
         @Volatile
-        private var INSTANCE: AlarmRoomDatabase? = null
+        private var INSTANCE: ReminderRoomDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope): AlarmRoomDatabase {
+        fun getDatabase(context: Context, scope: CoroutineScope): ReminderRoomDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance
             }
 
             synchronized(this) {
-                val instance = Room.databaseBuilder(context.applicationContext, AlarmRoomDatabase::class.java, "alarm_database")
-                    .addCallback(AlarmDatabaseCallback(scope))
+                val instance = Room.databaseBuilder(context.applicationContext, ReminderRoomDatabase::class.java, "reminder_database")
+                    .addCallback(ReminderDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
                 return instance

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/alarmView"
+    android:id="@+id/reminderView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
@@ -13,7 +13,7 @@
     tools:ignore="Overdraw">
 
     <TextView
-        android:id="@+id/alarmTitle"
+        android:id="@+id/titleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
@@ -24,66 +24,66 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Alarm Title" />
+        tools:text="Reminder Title" />
 
     <ImageView
-        android:id="@+id/alarmDateIcon"
-        style="@style/AlarmSubtitleIcon"
+        android:id="@+id/dateIcon"
+        style="@style/ReminderSubtitleIcon"
         android:layout_marginStart="0dp"
-        android:contentDescription="@string/alarm_date_hint"
+        android:contentDescription="@string/reminder_date_hint"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alarmTitle"
+        app:layout_constraintTop_toBottomOf="@+id/titleView"
         app:srcCompat="@drawable/ic_date_range_black_24dp" />
 
     <TextView
-        android:id="@+id/alarmDate"
-        style="@style/AlarmSubtitleText"
+        android:id="@+id/dateView"
+        style="@style/ReminderSubtitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/alarmDateIcon"
-        app:layout_constraintTop_toBottomOf="@+id/alarmTitle"
+        app:layout_constraintStart_toEndOf="@+id/dateIcon"
+        app:layout_constraintTop_toBottomOf="@+id/titleView"
         tools:text="Sat Apr 21, 2020"/>
 
     <ImageView
-        android:id="@+id/alarmTimeIcon"
-        style="@style/AlarmSubtitleIcon"
-        android:contentDescription="@string/alarm_time_hint"
-        app:layout_constraintStart_toEndOf="@+id/alarmDate"
-        app:layout_constraintTop_toBottomOf="@+id/alarmTitle"
+        android:id="@+id/timeIcon"
+        style="@style/ReminderSubtitleIcon"
+        android:contentDescription="@string/reminder_time_hint"
+        app:layout_constraintStart_toEndOf="@+id/dateView"
+        app:layout_constraintTop_toBottomOf="@+id/titleView"
         app:srcCompat="@drawable/ic_access_time_black_24dp" />
 
     <TextView
-        android:id="@+id/alarmTime"
-        style="@style/AlarmSubtitleText"
+        android:id="@+id/timeView"
+        style="@style/ReminderSubtitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/alarmTimeIcon"
-        app:layout_constraintTop_toBottomOf="@+id/alarmTitle"
+        app:layout_constraintStart_toEndOf="@+id/timeIcon"
+        app:layout_constraintTop_toBottomOf="@+id/titleView"
         tools:text="10:10 AM" />
 
     <ImageView
-        android:id="@+id/alarmOccasionIcon"
-        style="@style/AlarmSubtitleIcon"
+        android:id="@+id/occasionIcon"
+        style="@style/ReminderSubtitleIcon"
         android:layout_marginStart="0dp"
-        android:contentDescription="@string/alarm_occasion_label"
+        android:contentDescription="@string/reminder_occasion_hint"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alarmDateIcon"
+        app:layout_constraintTop_toBottomOf="@+id/dateIcon"
         app:srcCompat="@drawable/ic_cake_black_24dp" />
 
     <TextView
-        android:id="@+id/alarmOccasion"
-        style="@style/AlarmSubtitleText"
+        android:id="@+id/occasionView"
+        style="@style/ReminderSubtitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/alarmOccasionIcon"
-        app:layout_constraintTop_toBottomOf="@+id/alarmDateIcon"
+        app:layout_constraintStart_toEndOf="@+id/occasionIcon"
+        app:layout_constraintTop_toBottomOf="@+id/dateIcon"
         tools:text="Anniversary" />
 
     <ImageView
-        android:id="@+id/alarmDeleteIcon"
+        android:id="@+id/deleteIcon"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:contentDescription="@string/alarm_delete_hint"
+        android:contentDescription="@string/reminder_delete_hint"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

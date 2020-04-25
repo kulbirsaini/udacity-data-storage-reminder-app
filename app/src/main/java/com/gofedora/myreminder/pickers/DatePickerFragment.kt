@@ -11,12 +11,16 @@ import com.gofedora.myreminder.fragments.FragmentCallback
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DatePickerFragment(private val defaultDate: String?): DialogFragment(), DatePickerDialog.OnDateSetListener {
+class DatePickerFragment: DialogFragment(), DatePickerDialog.OnDateSetListener {
     private lateinit var callback: FragmentCallback
+    private var date: String? = null
 
-    fun setFragmentActionListener(callback: FragmentCallback): DatePickerFragment {
+    fun setFragmentActionListener(callback: FragmentCallback) {
         this.callback = callback
-        return this
+    }
+
+    fun setDate(date: String?) {
+        this.date = date
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -24,10 +28,10 @@ class DatePickerFragment(private val defaultDate: String?): DialogFragment(), Da
         context?.let {
             val dialog = DatePickerDialog(it, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
 
-            defaultDate?.let { dateStr: String ->
-                SimpleDateFormat("EEE, d MMM, yyyy", Locale.US).parse(dateStr)?.let { date: Date ->
-                    cal.time = date
-                    Log.e(getString(R.string.LogTag), "Setting date to $defaultDate")
+            this.date?.let { dateStr: String ->
+                SimpleDateFormat("EEE, d MMM, yyyy", Locale.US).parse(dateStr)?.let { parsedDate: Date ->
+                    cal.time = parsedDate
+                    Log.e(getString(R.string.LogTag), "Setting date to $dateStr")
                     dialog.datePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
                 }
             }

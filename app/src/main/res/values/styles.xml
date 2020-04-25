@@ -17,13 +17,13 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="EditAlarmIcon">
+    <style name="EditReminderIcon">
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="EditAlarmValue">
+    <style name="EditReminderValue">
         <item name="android:layout_marginTop">4dp</item>
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:textSize">14sp</item>
@@ -33,14 +33,14 @@
         <item name="android:layout_marginTop">16dp</item>
     </style>
 
-    <style name="AlarmSubtitleIcon">
+    <style name="ReminderSubtitleIcon">
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_width">20dp</item>
         <item name="android:layout_height">20dp</item>
     </style>
 
-    <style name="AlarmSubtitleText">
+    <style name="ReminderSubtitleText">
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginStart">4dp</item>
         <item name="android:textSize">14sp</item>

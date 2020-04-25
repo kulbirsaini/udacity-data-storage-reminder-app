@@ -11,12 +11,16 @@ import com.gofedora.myreminder.fragments.FragmentCallback
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TimePickerFragment(private val defaultTime: String?): DialogFragment(), TimePickerDialog.OnTimeSetListener {
+class TimePickerFragment: DialogFragment(), TimePickerDialog.OnTimeSetListener {
     private lateinit var callback: FragmentCallback
+    private var time: String? = null
 
-    fun setFragmentActionListener(callback: FragmentCallback): TimePickerFragment {
+    fun setFragmentActionListener(callback: FragmentCallback) {
         this.callback = callback
-        return this
+    }
+
+    fun setTime(time: String?) {
+        this.time = time
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -24,10 +28,10 @@ class TimePickerFragment(private val defaultTime: String?): DialogFragment(), Ti
         context?.let {
             val dialog = TimePickerDialog(it, this, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), android.text.format.DateFormat.is24HourFormat(it))
 
-            defaultTime?.let { timeStr: String ->
-                SimpleDateFormat("hh:mm a", Locale.US).parse(timeStr)?.let { time: Date ->
-                    cal.time = time
-                    Log.e(getString(R.string.LogTag), "Setting time to $defaultTime")
+            time?.let { timeStr: String ->
+                SimpleDateFormat("hh:mm a", Locale.US).parse(timeStr)?.let { parsedTime: Date ->
+                    cal.time = parsedTime
+                    Log.e(getString(R.string.LogTag), "Setting time to $timeStr")
                     dialog.updateTime(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
                 }
             }

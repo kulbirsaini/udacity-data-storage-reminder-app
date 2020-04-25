@@ -7,19 +7,19 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.gofedora.myreminder.Alarm
+import com.gofedora.myreminder.Reminder
 import com.gofedora.myreminder.R
-import kotlinx.android.synthetic.main.edit_alarm.*
+import kotlinx.android.synthetic.main.edit_reminder.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EditAlarmFragment: Fragment() {
-    private var alarm: Alarm? = null
+class ReminderEditFragment: Fragment() {
+    private lateinit var reminder: Reminder
     private lateinit var callback: FragmentCallback
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.edit_alarm, container, false)
+        return inflater.inflate(R.layout.edit_reminder, container, false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,21 +35,22 @@ class EditAlarmFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        alarm = arguments?.let {
-            it.getSerializable(FragmentCallback.ALARM) as Alarm?
-        } ?: Alarm(occasion = Alarm.getOccasionId(context, 0))
+        reminder = arguments?.let {
+            it.getSerializable(FragmentCallback.REMINDER) as Reminder?
+        } ?: Reminder(occasion = Reminder.getOccasionId(context, 0))
 
-        titleValue.setText(alarm?.title)
-        setDate(alarm?.time)
-        setTime(alarm?.time)
+        titleValue.setText(reminder.title)
+        setDate(reminder.time)
+        setTime(reminder.time)
 
         val spinner = view.findViewById<Spinner>(R.id.occasionSpinner)
         context?.let {
-            val adapter = ArrayAdapter.createFromResource(it, R.array.occasion_values, android.R.layout.simple_spinner_dropdown_item)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = adapter
+            val adapter = ArrayAdapter.createFromResource(it, R.array.occasion_values, android.R.layout.simple_spinner_dropdown_item).apply {
+                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
 
-            spinner.setSelection(adapter.getPosition(Alarm.getOccasionValue(it, alarm?.occasion ?: 0)))
+            spinner.adapter = adapter
+            spinner.setSelection(adapter.getPosition(Reminder.getOccasionValue(it, reminder.occasion)))
         }
 
         dateValue.setOnClickListener {
@@ -64,23 +65,22 @@ class EditAlarmFragment: Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.actionSave -> {
-                val title = titleValue.text
-                val cal = Calendar.getInstance()
+                reminder.title = titleValue.text.toString()
+                reminder.occasion = Reminder.getOccasionId(context, occasionSpinner.selectedItemPosition)
                 SimpleDateFormat("EEE, d MMM, yyyy hh:mm a", Locale.US).parse("${dateValue.text} ${timeValue.text}")?.let {
-                    cal.time = it
+                    reminder.time = it
                 }
-                val occasion = Alarm.getOccasionId(context, occasionSpinner.selectedItemPosition)
-                val alarm = Alarm(title = title.toString(), time = cal.time, occasion = occasion)
-                Log.e(getString(R.string.LogTag), "Saving $title / ${cal.time} / $occasion / Position: ${occasionSpinner.selectedItemPosition}")
 
-                if (title.isEmpty() || cal.time.before(Date()) || occasion < 0) {
+                Log.e(getString(R.string.LogTag), "Saving ${reminder.title} / ${reminder.time} / ${reminder.occasion} / Position: ${occasionSpinner.selectedItemPosition}")
+
+                if (reminder.title.isEmpty() || reminder.time.before(Date()) || reminder.occasion < 0) {
                     Toast.makeText(context, "Input error!", Toast.LENGTH_LONG).show()
                     return false
                 }
 
                 this.callback.onActionPerformed(Bundle().apply {
-                    putInt(FragmentCallback.ACTION_KEY, FragmentCallback.SAVE_ALARM)
-                    putSerializable(FragmentCallback.ALARM, alarm)
+                    putInt(FragmentCallback.ACTION_KEY, FragmentCallback.SAVE_REMINDER_CLICKED)
+                    putSerializable(FragmentCallback.REMINDER, reminder)
                 })
                 true
             }
@@ -96,9 +96,8 @@ class EditAlarmFragment: Fragment() {
         })
     }
 
-    fun setFragmentActionListener(callback: FragmentCallback): EditAlarmFragment {
+    fun setFragmentActionListener(callback: FragmentCallback) {
         this.callback = callback
-        return this
     }
 
     fun onFragmentActionPerformed(bundle: Bundle) {

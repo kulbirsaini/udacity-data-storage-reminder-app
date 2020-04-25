@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.AlarmListFragment">
+    tools:context=".fragments.ReminderListFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -15,23 +15,23 @@
 
     <ImageView
         android:id="@+id/titleIcon"
-        style="@style/EditAlarmIcon"
+        style="@style/EditReminderIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/alarm_title_hint"
+        android:contentDescription="@string/reminder_title_hint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_event_note_black_24dp" />
 
     <EditText
         android:id="@+id/titleValue"
-        style="@style/EditAlarmValue"
+        style="@style/EditReminderValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:autofillHints=""
         android:ems="10"
-        android:hint="@string/alarm_title_hint"
+        android:hint="@string/reminder_title_hint"
         android:inputType="textCapWords"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/titleIcon"
@@ -48,46 +48,46 @@
 
     <ImageView
         android:id="@+id/dateIcon"
-        style="@style/EditAlarmIcon"
+        style="@style/EditReminderIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/alarm_date_label"
+        android:contentDescription="@string/reminder_date_hint"
         android:src="@drawable/ic_date_range_black_24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spacer1" />
 
     <TextView
         android:id="@+id/dateValue"
-        style="@style/EditAlarmValue"
+        style="@style/EditReminderValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:autofillHints="@string/alarm_date_hint"
+        android:autofillHints="@string/reminder_date_hint"
         android:ems="10"
-        android:hint="@string/alarm_date_hint"
+        android:hint="@string/reminder_date_hint"
         app:layout_constraintEnd_toEndOf="@id/guideline"
         app:layout_constraintStart_toEndOf="@+id/dateIcon"
         app:layout_constraintTop_toBottomOf="@+id/spacer1" />
 
     <ImageView
         android:id="@+id/timeIcon"
-        style="@style/EditAlarmIcon"
+        style="@style/EditReminderIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/alarm_time_hint"
+        android:contentDescription="@string/reminder_time_hint"
         android:src="@drawable/ic_access_time_black_24dp"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/spacer1" />
 
     <TextView
         android:id="@+id/timeValue"
-        style="@style/EditAlarmValue"
+        style="@style/EditReminderValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:autofillHints="@string/alarm_time_hint"
+        android:autofillHints="@string/reminder_time_hint"
         android:ems="10"
-        android:hint="@string/alarm_time_hint"
+        android:hint="@string/reminder_time_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/timeIcon"
         app:layout_constraintTop_toBottomOf="@+id/spacer1" />
@@ -103,17 +103,17 @@
 
     <ImageView
         android:id="@+id/occasionIcon"
-        style="@style/EditAlarmIcon"
+        style="@style/EditReminderIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/alarm_occasion_label"
+        android:contentDescription="@string/reminder_occasion_hint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spacer2"
         app:srcCompat="@drawable/ic_cake_black_24dp" />
 
     <Spinner
         android:id="@+id/occasionSpinner"
-        style="@style/EditAlarmValue"
+        style="@style/EditReminderValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/occasionIcon"
