@@ -18,6 +18,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), FragmentCallback {
 
+    companion object {
+        private const val BACKSTACK_TAG = "ReminderFragments"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,7 +44,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
 
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, editFragment)
-                .addToBackStack(getString(R.string.reminder_fragment_backstack))
+                .addToBackStack(BACKSTACK_TAG)
                 .commit()
 
             // Hide FloatingActionButton on edit page
@@ -61,7 +65,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
                 }
 
                 ReminderViewModel(application).insertMultiple(reminders)
-                Toast.makeText(this, getString(R.string.dummy_data_added), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.dummy_reminders_added), Toast.LENGTH_SHORT).show()
                 true
             }
             // Delete All clicked
@@ -69,7 +73,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
                 // Show confirmation dialog before performing delete all action
                 deleteAlertDialog(R.string.delete_all_dialog_title, R.string.delete_all_dialog_message, DialogInterface.OnClickListener { _, _ ->
                     ReminderViewModel(application).deleteAll()
-                    Toast.makeText(this, getString(R.string.delete_all_alert), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.reminder_deleted_all), Toast.LENGTH_SHORT).show()
                 })
                 true
             }
@@ -103,7 +107,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
 
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(getString(R.string.reminder_fragment_backstack)) // Add to back stack so that user can navigate back to reminder list
+                    .addToBackStack(BACKSTACK_TAG) // Add to back stack so that user can navigate back to reminder list
                     .commit()
 
                 // Hide FloatingActionButton

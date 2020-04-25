@@ -2,90 +2,106 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/reminderView"
+    android:id="@+id/reminderContainerView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:background="@android:color/holo_blue_dark"
-    android:paddingStart="24dp"
-    android:paddingEnd="0dp"
-    android:paddingBottom="8dp"
-    tools:ignore="Overdraw">
+    android:paddingBottom="@dimen/card_margin">
 
-    <TextView
-        android:id="@+id/titleView"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/reminderCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:textAlignment="textStart"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:layout_marginStart="@dimen/card_margin"
+        android:layout_marginEnd="@dimen/card_margin"
+        android:background="@color/colorReminderCard"
+        app:cardBackgroundColor="@color/colorReminderCard"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardMaxElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Reminder Title" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/dateIcon"
-        style="@style/ReminderSubtitleIcon"
-        android:layout_marginStart="0dp"
-        android:contentDescription="@string/reminder_date_hint"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleView"
-        app:srcCompat="@drawable/ic_date_range_black_24dp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/reminderView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="24dp"
+            android:paddingEnd="0dp"
+            android:paddingBottom="@dimen/card_margin">
 
-    <TextView
-        android:id="@+id/dateView"
-        style="@style/ReminderSubtitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/dateIcon"
-        app:layout_constraintTop_toBottomOf="@+id/titleView"
-        tools:text="Sat Apr 21, 2020"/>
+            <TextView
+                android:id="@+id/titleView"
+                style="@style/ReminderTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Reminder Title" />
 
-    <ImageView
-        android:id="@+id/timeIcon"
-        style="@style/ReminderSubtitleIcon"
-        android:contentDescription="@string/reminder_time_hint"
-        app:layout_constraintStart_toEndOf="@+id/dateView"
-        app:layout_constraintTop_toBottomOf="@+id/titleView"
-        app:srcCompat="@drawable/ic_access_time_black_24dp" />
+            <ImageView
+                android:id="@+id/dateIcon"
+                style="@style/ReminderSubtitleIcon"
+                android:layout_marginStart="0dp"
+                android:contentDescription="@string/reminder_date_hint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titleView"
+                app:srcCompat="@drawable/ic_date_range_black_24dp" />
 
-    <TextView
-        android:id="@+id/timeView"
-        style="@style/ReminderSubtitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/timeIcon"
-        app:layout_constraintTop_toBottomOf="@+id/titleView"
-        tools:text="10:10 AM" />
+            <TextView
+                android:id="@+id/dateView"
+                style="@style/ReminderSubtitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/dateIcon"
+                app:layout_constraintTop_toBottomOf="@+id/titleView"
+                tools:text="Sat Apr 21, 2020" />
 
-    <ImageView
-        android:id="@+id/occasionIcon"
-        style="@style/ReminderSubtitleIcon"
-        android:layout_marginStart="0dp"
-        android:contentDescription="@string/reminder_occasion_hint"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateIcon"
-        app:srcCompat="@drawable/ic_cake_black_24dp" />
+            <ImageView
+                android:id="@+id/timeIcon"
+                style="@style/ReminderSubtitleIcon"
+                android:contentDescription="@string/reminder_time_hint"
+                app:layout_constraintStart_toEndOf="@+id/dateView"
+                app:layout_constraintTop_toBottomOf="@+id/titleView"
+                app:srcCompat="@drawable/ic_access_time_black_24dp" />
 
-    <TextView
-        android:id="@+id/occasionView"
-        style="@style/ReminderSubtitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/occasionIcon"
-        app:layout_constraintTop_toBottomOf="@+id/dateIcon"
-        tools:text="Anniversary" />
+            <TextView
+                android:id="@+id/timeView"
+                style="@style/ReminderSubtitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/timeIcon"
+                app:layout_constraintTop_toBottomOf="@+id/titleView"
+                tools:text="10:10 AM" />
 
-    <ImageView
-        android:id="@+id/deleteIcon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:contentDescription="@string/reminder_delete_hint"
-        android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_delete_black_24dp" />
+            <ImageView
+                android:id="@+id/occasionIcon"
+                style="@style/ReminderSubtitleIcon"
+                android:layout_marginStart="0dp"
+                android:contentDescription="@string/reminder_occasion_hint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dateIcon"
+                app:srcCompat="@drawable/ic_cake_black_24dp" />
+
+            <TextView
+                android:id="@+id/occasionView"
+                style="@style/ReminderSubtitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/occasionIcon"
+                app:layout_constraintTop_toBottomOf="@+id/dateIcon"
+                tools:text="Anniversary" />
+
+            <ImageView
+                android:id="@+id/deleteIcon"
+                android:layout_width="@dimen/delete_icon_size"
+                android:layout_height="@dimen/delete_icon_size"
+                android:contentDescription="@string/reminder_delete_hint"
+                android:padding="@dimen/delete_icon_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_delete_black_24dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
