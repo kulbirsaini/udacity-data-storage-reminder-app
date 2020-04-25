@@ -8,9 +8,11 @@ class ReminderRepository(private val reminderDao: ReminderDao) {
     val allReminders: LiveData<List<Reminder>> = reminderDao.getReminders()
 
     suspend fun insert(reminder: Reminder) {
-        reminder.created_at = Date()
-
+        // Validate data once again before inserting
         if (reminder.title.isNotEmpty() && reminder.occasion >= 0 && reminder.time > Date()) {
+            // Set created_at to now
+            reminder.created_at = Date()
+
             reminderDao.insert(reminder)
         }
     }
@@ -20,8 +22,11 @@ class ReminderRepository(private val reminderDao: ReminderDao) {
     }
 
     suspend fun update(reminder: Reminder) {
+        // Validate data before updating
         if (reminder.title.isNotEmpty() && reminder.occasion >= 0 && reminder.time > Date()) {
+            // Set updated_at to now
             reminder.updated_at = Date()
+
             reminderDao.update(reminder)
         }
     }

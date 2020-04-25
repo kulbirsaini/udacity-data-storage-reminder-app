@@ -11,6 +11,10 @@ import com.gofedora.myreminder.converters.DateConverter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+/**
+ * Copied from https://codelabs.developers.google.com/codelabs/android-room-with-a-view-kotlin/#11
+ * Not a freaking clue!
+ */
 @Database(entities = [Reminder::class], version = 1, exportSchema = false)
 @TypeConverters(DateConverter::class)
 abstract class ReminderRoomDatabase: RoomDatabase() {

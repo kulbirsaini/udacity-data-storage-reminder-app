@@ -18,30 +18,20 @@ class ReminderListFragment : Fragment() {
 
     private lateinit var callback: FragmentCallback
 
+    /**
+     * Callback instance to communicate with parent activity/fragment
+     */
     fun setFragmentActionListener(callback: FragmentCallback) {
         this.callback = callback
     }
 
+    /**
+     * Override onCreate so that we can enable fragment specific menu items
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Announce that this fragment has its own menu
         setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_list, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        val reminderViewModel = ViewModelProvider(this).get(ReminderViewModel::class.java)
-
-        reminderViewModel.allReminders.observe(viewLifecycleOwner, Observer { reminders ->
-            reminders?.let {
-                menu.findItem(R.id.actionDeleteAll).isEnabled = reminders.isNotEmpty()
-            }
-        })
-
-        super.onPrepareOptionsMenu(menu)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -57,6 +47,7 @@ class ReminderListFragment : Fragment() {
             setFragmentActionListener(this@ReminderListFragment.callback)
         }
 
+        // Observe changes to allReminders and announce the fresh list to ReminderListAdapter
         reminderViewModel.allReminders.observe(viewLifecycleOwner, Observer { reminders ->
             reminders?.let {
                 reminderListAdapter.setReminders(reminders)
@@ -67,5 +58,34 @@ class ReminderListFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = reminderListAdapter
         }
+    }
+
+    /**
+     * Override onCreateOptionsMenu to inflate menu for this fragment
+     */
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_list, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    /**
+     * Override onPrepareOptionsMenu to dynamically enable/disable certain menu items
+     */
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        val reminderViewModel = ViewModelProvider(this).get(ReminderViewModel::class.java)
+
+        reminderViewModel.allReminders.observe(viewLifecycleOwner, Observer { reminders ->
+            reminders?.let {
+                val hasReminders = reminders.isNotEmpty()
+
+                // Enable Delete All menu item only when we have reminders
+                menu.findItem(R.id.actionDeleteAll).isEnabled = hasReminders
+
+                // Enable Insert Dummy Data menu item only when we don't have any reminders
+                menu.findItem(R.id.actionInsertDummyData).isEnabled = !hasReminders
+            }
+        })
+
+        super.onPrepareOptionsMenu(menu)
     }
 }

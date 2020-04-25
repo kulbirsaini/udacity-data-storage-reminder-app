@@ -40,11 +40,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
-        app:backgroundTint="@android:color/holo_red_light"
+        app:backgroundTint="#FF3D00"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_alarm_add_black" />
+        app:maxImageSize="32dp"
+        app:srcCompat="@drawable/ic_add_white_32dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

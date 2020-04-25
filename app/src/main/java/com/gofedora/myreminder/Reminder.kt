@@ -16,6 +16,9 @@ data class Reminder (
     var updated_at: Date = Date()
 ): Serializable {
     companion object {
+        /**
+         * Get the occasionId based on the position of the element in the occasion spinner dropdown
+         */
         fun getOccasionId(context: Context?, position: Int): Int {
             context?.let {
                 val keys = it.resources.getIntArray(R.array.occasion_keys)
@@ -27,6 +30,9 @@ data class Reminder (
             return 0
         }
 
+        /**
+         * Get human readable occasion value from occasion Id of a reminder
+         */
         fun getOccasionValue(context: Context?, id: Int): String {
             context?.let {
                 val values = it.resources.getStringArray(R.array.occasion_values)
@@ -40,13 +46,15 @@ data class Reminder (
             return ""
         }
 
+        /**
+         * Generates a default date/time to tomorrow at 10:10 AM
+         */
         fun getDefaultDate(): Date {
-            val cal = Calendar.getInstance()
-            cal.add(Calendar.DATE, 1)
-            cal.set(Calendar.HOUR_OF_DAY, 10)
-            cal.set(Calendar.MINUTE, 10)
-
-            return cal.time
+            return Calendar.getInstance().apply {
+                add(Calendar.DATE, 1)
+                set(Calendar.HOUR_OF_DAY, 10)
+                set(Calendar.MINUTE, 10)
+            }.time
         }
     }
 }
