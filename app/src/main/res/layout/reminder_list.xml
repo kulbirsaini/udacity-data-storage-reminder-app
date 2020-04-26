@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/remindersList"
+    android:id="@+id/reminderList"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/card_margin"
+    android:paddingStart="@dimen/card_margin"
+    android:paddingEnd="@dimen/card_margin"
+    android:paddingTop="@dimen/card_margin"
+    android:clipToPadding="false"
     app:layout_constraintEnd_toStartOf="@+id/appBarLayout"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />

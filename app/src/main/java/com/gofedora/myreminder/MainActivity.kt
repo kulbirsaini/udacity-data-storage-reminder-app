@@ -6,34 +6,30 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
+import com.gofedora.myreminder.dialogs.DatePickerFragment
+import com.gofedora.myreminder.dialogs.MyAlertDialog
+import com.gofedora.myreminder.dialogs.TimePickerFragment
 import com.gofedora.myreminder.fragments.FragmentCallback
 import com.gofedora.myreminder.fragments.ReminderEditFragment
 import com.gofedora.myreminder.fragments.ReminderListFragment
-import com.gofedora.myreminder.pickers.DatePickerFragment
-import com.gofedora.myreminder.pickers.TimePickerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), FragmentCallback {
-
-    companion object {
-        private const val REMINDER_LIST_FRAGMENT = 1
-        private const val REMINDER_EDIT_FRAGMENT = 2
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        // Initiate a draw the reminder list on initial load
-        navigateToFragment(REMINDER_LIST_FRAGMENT)
+        // Initiate and draw the reminder list on initial load. Don't draw on activity restart
+        if (savedInstanceState == null)
+            navigateToFragment(FragmentCallback.REMINDER_FRAGMENT_LIST)
 
         // Attach onClickListener to FloatingActionButton to switch to edit page
         fab.setOnClickListener {
-            navigateToFragment(REMINDER_EDIT_FRAGMENT)
+            navigateToFragment(FragmentCallback.REMINDER_FRAGMENT_EDIT)
         }
     }
 
@@ -42,26 +38,16 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
      */
     private fun navigateToFragment(fragmentId: Int, bundle: Bundle = Bundle()) {
         when (fragmentId) {
-            REMINDER_LIST_FRAGMENT -> {
+            FragmentCallback.REMINDER_FRAGMENT_LIST -> {
                 // Flush the FragmentManager backstack to clear any fragments
                 supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
-                val fragment = ReminderListFragment().apply {
-                    setFragmentActionListener(this@MainActivity)
-                }
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
+                    .replace(R.id.fragment_container, ReminderListFragment())
                     .commit()
-
-                // Show FloatingActionButton
-                fab.visibility = View.VISIBLE
-
-                // Disable back to home navigation button
-                toolbar.navigationIcon = null
             }
-            REMINDER_EDIT_FRAGMENT -> {
+            FragmentCallback.REMINDER_FRAGMENT_EDIT -> {
                 val fragment = ReminderEditFragment().apply {
-                    setFragmentActionListener(this@MainActivity)
                     arguments = bundle
                 }
 
@@ -69,15 +55,6 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
                     .replace(R.id.fragment_container, fragment)
                     .addToBackStack("ReminderFragments")
                     .commit()
-
-                // Hide FloatingActionButton on edit page
-                fab.visibility = View.GONE
-
-                // Add Back to Home navigation
-                toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-                toolbar.setNavigationOnClickListener {
-                    navigateToFragment(REMINDER_LIST_FRAGMENT)
-                }
             }
         }
     }
@@ -105,10 +82,13 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
             // Delete All clicked
             R.id.actionDeleteAll -> {
                 // Show confirmation dialog before performing delete all action
-                deleteAlertDialog(R.string.delete_all_dialog_title, R.string.delete_all_dialog_message, DialogInterface.OnClickListener { _, _ ->
-                    ReminderViewModel(application).deleteAll()
-                    Toast.makeText(this, getString(R.string.reminder_deleted_all), Toast.LENGTH_SHORT).show()
-                })
+                MyAlertDialog().apply {
+                    arguments = Bundle().apply {
+                        putInt(FragmentCallback.ALERT_TITLE, R.string.delete_all_dialog_title)
+                        putInt(FragmentCallback.ALERT_MESSAGE, R.string.delete_all_dialog_message)
+                        putInt(FragmentCallback.ALERT_TYPE, FragmentCallback.ALERT_TYPE_DELETE_ALL)
+                    }
+                }.show(supportFragmentManager, "alertDialog")
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -138,20 +118,18 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
             // A reminder in the reminder list was clicked, navigate to edit page
             FragmentCallback.REMINDER_CLICKED -> {
                 // Initiate ReminderEditFragment and pass along the arguments
-                navigateToFragment(REMINDER_EDIT_FRAGMENT, bundle)
+                navigateToFragment(FragmentCallback.REMINDER_FRAGMENT_EDIT, bundle)
             }
             // Date was clicked on edit page, initiate and show DatePicker
             FragmentCallback.DATE_CLICKED -> {
                 DatePickerFragment().apply {
-                    setFragmentActionListener(this@MainActivity)
-                    setDate(bundle.getString(FragmentCallback.DATE))
+                    arguments = bundle
                 }.show(supportFragmentManager, "datePicker")
             }
             // Time was clicked on edit page, initiate and show TimePicker
             FragmentCallback.TIME_CLICKED -> {
                 TimePickerFragment().apply {
-                    setTime(bundle.getString(FragmentCallback.TIME))
-                    setFragmentActionListener(this@MainActivity)
+                    arguments = bundle
                 }.show(supportFragmentManager, "timePicker")
             }
             // Date was selected on DatePicker, announce it to ReminderEditFragment
@@ -184,7 +162,7 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
                 }
 
                 // Time to switch back to reminder list
-                navigateToFragment(REMINDER_LIST_FRAGMENT)
+                navigateToFragment(FragmentCallback.REMINDER_FRAGMENT_LIST)
             }
             // Delete Icon clicked
             FragmentCallback.DELETE_REMINDER_CLICKED -> {
@@ -195,25 +173,72 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
                 // We need to something only if we actually have a reminder
                 reminder?.let { thisReminder ->
                     // Show confirmation dialog before performing the actual delete action
-                    deleteAlertDialog(R.string.delete_dialog_title, R.string.delete_dialog_message, DialogInterface.OnClickListener { _, _ ->
-                        ReminderViewModel(application).delete(thisReminder)
-                        Toast.makeText(this@MainActivity, getString(R.string.reminder_deleted), Toast.LENGTH_SHORT).show()
-                    })
+                    MyAlertDialog().apply {
+                        arguments = Bundle().apply {
+                            putInt(FragmentCallback.ALERT_TITLE, R.string.delete_dialog_title)
+                            putInt(FragmentCallback.ALERT_MESSAGE, R.string.delete_dialog_message)
+                            putInt(FragmentCallback.ALERT_TYPE, FragmentCallback.ALERT_TYPE_DELETE)
+                            putSerializable(FragmentCallback.REMINDER, thisReminder)
+                        }
+                    }.show(supportFragmentManager, "alertDialog")
+                }
+            }
+            // Alert Action clicked
+            FragmentCallback.ALERT_ACTION_PERFORMED -> {
+                Log.e(getString(R.string.LogTag), "In MainActivity: Alert Action Performed: ${bundle.getInt(FragmentCallback.ALERT_BUTTON)}")
+
+                // See which button on the alert was clicked
+                when (bundle.getInt(FragmentCallback.ALERT_BUTTON)) {
+                    // User agreed to the message
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        Log.e(getString(R.string.LogTag), "In MainActivity: Alert Type: ${bundle.getInt(FragmentCallback.ALERT_TYPE)}")
+
+                        // See what alert we showed to the user so that we can take appropriate post-process action
+                        when (bundle.getInt(FragmentCallback.ALERT_TYPE)) {
+                            // Delete Reminder Alert
+                            FragmentCallback.ALERT_TYPE_DELETE -> {
+                                Log.e(getString(R.string.LogTag), "In MainActivity: Alert Delete: ${(bundle.getSerializable(FragmentCallback.REMINDER) as Reminder).title}")
+
+                                val reminder = bundle.getSerializable(FragmentCallback.REMINDER) as Reminder?
+                                reminder?.let {
+                                    ReminderViewModel(application).delete(it)
+                                    Toast.makeText(this@MainActivity, getString(R.string.reminder_deleted), Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                            // Delete All Reminders Alert
+                            FragmentCallback.ALERT_TYPE_DELETE_ALL -> {
+                                Log.e(getString(R.string.LogTag), "In MainActivity: Alert Delete All")
+
+                                ReminderViewModel(application).deleteAll()
+                                Toast.makeText(this, getString(R.string.reminder_deleted_all), Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+            }
+            // Manage various UI elements based on which fragment is currently visible
+            FragmentCallback.REMINDER_FRAGMENT_RENDERED -> {
+                when (bundle.getInt(FragmentCallback.FRAGMENT_TYPE)) {
+                    FragmentCallback.REMINDER_FRAGMENT_LIST -> {
+                        // Show FloatingActionButton
+                        fab.visibility = View.VISIBLE
+
+                        // Disable back to home navigation button
+                        toolbar.navigationIcon = null
+                        toolbar.setNavigationOnClickListener(null)
+                    }
+                    FragmentCallback.REMINDER_FRAGMENT_EDIT -> {
+                        // Hide FloatingActionButton on edit page
+                        fab.visibility = View.GONE
+
+                        // Add Back to Home navigation
+                        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+                        toolbar.setNavigationOnClickListener {
+                            navigateToFragment(FragmentCallback.REMINDER_FRAGMENT_LIST)
+                        }
+                    }
                 }
             }
         }
-    }
-
-    /**
-     * General purpose function to initiate and show AlertDialog
-     */
-    private fun deleteAlertDialog(titleResource: Int, messageResource: Int, positiveCallback: DialogInterface.OnClickListener) {
-        AlertDialog.Builder(this)
-            .setTitle(getString(titleResource))
-            .setMessage(getString(messageResource))
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setPositiveButton(android.R.string.yes, positiveCallback)
-            .setNegativeButton(android.R.string.no, null)
-            .show()
     }
 }

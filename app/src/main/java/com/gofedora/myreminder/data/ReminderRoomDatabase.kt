@@ -5,11 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.gofedora.myreminder.Reminder
 import com.gofedora.myreminder.converters.DateConverter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 /**
  * Copied from https://codelabs.developers.google.com/codelabs/android-room-with-a-view-kotlin/#11
@@ -21,35 +18,18 @@ abstract class ReminderRoomDatabase: RoomDatabase() {
 
     abstract fun reminderDao(): ReminderDao
 
-    private class ReminderDatabaseCallback(private val scope: CoroutineScope): RoomDatabase.Callback() {
-        override fun onOpen(db: SupportSQLiteDatabase) {
-            super.onOpen(db)
-            INSTANCE?.let { database ->
-                scope.launch {
-                    clearDatabase(database.reminderDao())
-                }
-            }
-        }
-
-        suspend fun clearDatabase(reminderDao: ReminderDao) {
-            reminderDao.deleteAll()
-        }
-    }
-
     companion object {
         @Volatile
         private var INSTANCE: ReminderRoomDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope): ReminderRoomDatabase {
+        fun getDatabase(context: Context): ReminderRoomDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance
             }
 
             synchronized(this) {
-                val instance = Room.databaseBuilder(context.applicationContext, ReminderRoomDatabase::class.java, "reminder_database")
-                    .addCallback(ReminderDatabaseCallback(scope))
-                    .build()
+                val instance = Room.databaseBuilder(context.applicationContext, ReminderRoomDatabase::class.java, "reminder_database").build()
                 INSTANCE = instance
                 return instance
             }

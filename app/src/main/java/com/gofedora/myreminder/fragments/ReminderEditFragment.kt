@@ -6,6 +6,7 @@ import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.gofedora.myreminder.MainActivity
 import com.gofedora.myreminder.R
 import com.gofedora.myreminder.Reminder
 import kotlinx.android.synthetic.main.edit_reminder.*
@@ -15,13 +16,6 @@ import java.util.*
 class ReminderEditFragment: Fragment() {
     private lateinit var reminder: Reminder
     private lateinit var callback: FragmentCallback
-
-    /**
-     * Callback instance to communicate with parent activity/fragment
-     */
-    fun setFragmentActionListener(callback: FragmentCallback) {
-        this.callback = callback
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -60,6 +54,20 @@ class ReminderEditFragment: Fragment() {
         timeValue.setOnClickListener {
             pickerClicked(FragmentCallback.TIME_CLICKED, FragmentCallback.TIME, timeValue.text.toString())
         }
+    }
+
+    /**
+     * Override onActivityCreated to handle orientation changes or other activity restarts
+     */
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        // Set callback
+        this.callback = activity as MainActivity
+        this.callback.onActionPerformed(Bundle().apply {
+            putInt(FragmentCallback.ACTION_KEY, FragmentCallback.REMINDER_FRAGMENT_RENDERED)
+            putInt(FragmentCallback.FRAGMENT_TYPE, FragmentCallback.REMINDER_FRAGMENT_EDIT)
+        })
     }
 
     /**

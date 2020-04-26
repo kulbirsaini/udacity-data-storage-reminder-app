@@ -15,7 +15,7 @@ class ReminderViewModel(application: Application): AndroidViewModel(application)
     private val repository: ReminderRepository
 
     init {
-        val reminderDao = ReminderRoomDatabase.getDatabase(application, viewModelScope).reminderDao()
+        val reminderDao = ReminderRoomDatabase.getDatabase(application).reminderDao()
         repository = ReminderRepository(reminderDao)
         allReminders = repository.allReminders
     }

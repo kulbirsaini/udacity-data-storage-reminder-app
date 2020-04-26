@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.gofedora.myreminder.MainActivity
 import com.gofedora.myreminder.R
 import com.gofedora.myreminder.ReminderListAdapter
 import com.gofedora.myreminder.ReminderViewModel
@@ -16,14 +17,7 @@ import kotlinx.android.synthetic.main.reminder_list.*
  */
 class ReminderListFragment : Fragment() {
 
-    private lateinit var callback: FragmentCallback
-
-    /**
-     * Callback instance to communicate with parent activity/fragment
-     */
-    fun setFragmentActionListener(callback: FragmentCallback) {
-        this.callback = callback
-    }
+    private lateinit var reminderListAdapter: ReminderListAdapter
 
     /**
      * Override onCreate so that we can enable fragment specific menu items
@@ -43,9 +37,7 @@ class ReminderListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val reminderViewModel = ViewModelProvider(this).get(ReminderViewModel::class.java)
-        val reminderListAdapter = ReminderListAdapter().apply {
-            setFragmentActionListener(this@ReminderListFragment.callback)
-        }
+        reminderListAdapter = ReminderListAdapter()
 
         // Observe changes to allReminders and announce the fresh list to ReminderListAdapter
         reminderViewModel.allReminders.observe(viewLifecycleOwner, Observer { reminders ->
@@ -54,10 +46,24 @@ class ReminderListFragment : Fragment() {
             }
         })
 
-        remindersList.apply {
+        reminderList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = reminderListAdapter
         }
+    }
+
+    /**
+     * Override onActivityCreated to handle orientation changes or other activity restarts
+     */
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        // Set callback for RecyclerViewAdapter
+        reminderListAdapter.setFragmentActionListener(activity as MainActivity)
+        (activity as MainActivity).onActionPerformed(Bundle().apply {
+            putInt(FragmentCallback.ACTION_KEY, FragmentCallback.REMINDER_FRAGMENT_RENDERED)
+            putInt(FragmentCallback.FRAGMENT_TYPE, FragmentCallback.REMINDER_FRAGMENT_LIST)
+        })
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.gofedora.myreminder.pickers
+package com.gofedora.myreminder.dialogs
 
 import android.app.Dialog
 import android.app.TimePickerDialog
@@ -6,28 +6,23 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
+import com.gofedora.myreminder.MainActivity
 import com.gofedora.myreminder.R
 import com.gofedora.myreminder.fragments.FragmentCallback
 import java.text.SimpleDateFormat
 import java.util.*
 
 class TimePickerFragment: DialogFragment(), TimePickerDialog.OnTimeSetListener {
+
     private lateinit var callback: FragmentCallback
-    private var time: String? = null
 
     /**
-     * Callback instance to communicate with parent activity/fragment
+     * Override onActivityCreated to reassign callback
      */
-    fun setFragmentActionListener(callback: FragmentCallback) {
-        this.callback = callback
-    }
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
-    /**
-     * Set time that should be the default time on the TimePicker when initialized
-     * Format: R.string.time_format
-     */
-    fun setTime(time: String?) {
-        this.time = time
+        this.callback = activity as MainActivity
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -35,7 +30,7 @@ class TimePickerFragment: DialogFragment(), TimePickerDialog.OnTimeSetListener {
             val cal = Calendar.getInstance()
 
             // If we have a time, use it
-            time?.let { timeStr ->
+            arguments?.getString(FragmentCallback.TIME)?.let { timeStr ->
                 SimpleDateFormat(getString(R.string.time_format), Locale.US).parse(timeStr)?.let { parsedTime ->
                     cal.time = parsedTime
                 }
